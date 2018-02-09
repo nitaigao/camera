@@ -1,0 +1,32 @@
+{
+  "name": "camera",
+  "version": "0.1.0",
+  "private": true,
+  "devDependencies": {
+    "babel-preset-react-native-stage-0": "^1.0.1",
+    "jest-react-native": "^18.0.0",
+    "react-test-renderer": "16.2.0"
+  },
+  "scripts": {
+    "start": "react-native start",
+    "android": "react-native run-android",
+    "ios": "react-native run-ios",
+    "test": "node node_modules/jest/bin/jest.js"
+  },
+  "jest": {
+    "preset": "react-native"
+  },
+  "dependencies": {
+    "assert": "^1.4.1",
+    "buffer": "^5.0.8",
+    "native-base": "^2.3.8",
+    "react": "16.2.0",
+    "react-native": "0.52.0",
+    "react-native-camera": "^0.13.0",
+    "react-native-ecc": "^2.0.0",
+    "react-native-rsa-native": "^1.0.14",
+    "react-native-secure-key-store": "^1.0.9",
+    "stream": "^0.0.2",
+    "url-parse": "^1.2.0"
+  }
+}
