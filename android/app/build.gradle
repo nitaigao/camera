@@ -145,6 +145,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-touch-id')
     compile project(':react-native-ecc')
     compile project(':react-native-rsa-native')
     compile project(':react-native-secure-key-store')

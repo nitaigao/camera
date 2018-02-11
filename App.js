@@ -6,6 +6,8 @@ import * as ec    from 'react-native-ecc'
 import parse      from 'url-parse'
 import { Buffer } from 'buffer'
 
+import TouchID from 'react-native-touch-id'
+
 ec.setServiceID('education.assembly')
 
 import {
@@ -119,26 +121,25 @@ class Crypto {
   }
 }
 
-export default class App extends React.Component {
-  constructor() {
-    super()
-    this.state = {
-      requesting: false
-    }
-    this.crypto = new Crypto()
+
+class AuthService {
+  constructor(url) {
+    this.url = url
   }
 
-  async componentDidMount() {
-    await this.crypto.init()
+  async login(url) {
+    const payload = await this.payload()
+    await this.postPayload(payload)
   }
 
-  serverCallback = async (url) => {
-    this.setState({ requesting: true })
+  async payload(url) {
     const callback = `https://${url.host}${url.pathname}`
     console.debug(`Calling ${callback}`)
 
-    const publicKey = await this.crypto.loadPublicKey()
-    const key = await this.crypto.loadSigningKey(publicKey)
+    const crypto = new Crypto()
+
+    const publicKey = await crypto.loadPublicKey()
+    const key = await crypto.loadSigningKey(publicKey)
 
     const identity = key.pub.toString('hex')
 
@@ -154,7 +155,7 @@ export default class App extends React.Component {
 
     const valueToSign = clientData + serverData
 
-    const ids = await this.crypto.sign(valueToSign)
+    const ids = await crypto.sign(valueToSign)
     const idsData = ids.toString('base64')
 
     const payload = {
@@ -163,7 +164,11 @@ export default class App extends React.Component {
       ids:    idsData
     }
 
-    fetch(callback, {
+    return payload
+  }
+
+  postPayload(payload) {
+    return fetch(callback, {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -171,14 +176,37 @@ export default class App extends React.Component {
       },
       body: JSON.stringify(payload)
     })
-    .then((response) => {
-      console.log(response.status)
-      this.setState({ requesting: false })
-    })
-    .catch((error) => {
-      console.error(error)
-      this.setState({ requesting: false })
-    })
+  }
+}
+
+export default class App extends React.Component {
+  constructor() {
+    super()
+    this.state = {
+      requesting: false,
+      authenticated: false
+    }
+  }
+
+  async componentDidMount() {
+    const result = await TouchID.authenticate('Touch to continue')
+
+    if (!result) {
+      return
+    }
+
+    const crypto = new Crypto()
+    await crypto.init()
+    this.setState({ ...this.state, authenticated: true })
+  }
+
+  serverCallback = async (url) => {
+    this.setState({ requesting: true })
+
+    const authService = new AuthService(url)
+    const result = await authService.login()
+    console.log(result)
+    this.setState({ ...state, requesting: false })
   }
 
   onBarCodeRead = (e) => {
@@ -192,14 +220,16 @@ export default class App extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Camera
-          ref={(cam) => {
-            this.camera = cam
-          }}
-          onBarCodeRead={this.onBarCodeRead}
-          style={styles.preview}
-          aspect={Camera.constants.Aspect.fill}
-        />
+        {this.state.authenticated &&
+          <Camera
+            ref={(cam) => {
+              this.camera = cam
+            }}
+            onBarCodeRead={this.onBarCodeRead}
+            style={styles.preview}
+            aspect={Camera.constants.Aspect.fill}
+          />
+        }
       </View>
     )
   }

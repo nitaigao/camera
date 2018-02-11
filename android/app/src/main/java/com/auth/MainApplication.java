@@ -3,6 +3,7 @@ package com.auth;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.rnfingerprint.FingerprintAuthPackage;
 import com.rn.ecc.ECCPackage;
 import com.RNRSA.RNRSAPackage;
 import com.reactlibrary.securekeystore.RNSecureKeyStorePackage;
@@ -27,6 +28,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new FingerprintAuthPackage(),
             new ECCPackage(),
             new RNRSAPackage(),
             new RNSecureKeyStorePackage(),

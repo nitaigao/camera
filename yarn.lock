@@ -3090,6 +3090,10 @@ react-native-secure-key-store@^1.0.9:
   version "1.0.9"
   resolved "https://registry.yarnpkg.com/react-native-secure-key-store/-/react-native-secure-key-store-1.0.9.tgz#78246f3715fbac8522457e75328ad99022e0d82e"
 
+react-native-touch-id@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/react-native-touch-id/-/react-native-touch-id-4.0.0.tgz#ad8163e91828805dcd3c90b565ba536187503ac8"
+
 react-native-vector-icons@~4.4.2:
   version "4.4.3"
   resolved "https://registry.yarnpkg.com/react-native-vector-icons/-/react-native-vector-icons-4.4.3.tgz#9e847b8c432a17e5e0ffd60ccf09f3112a18b9df"
