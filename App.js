@@ -189,11 +189,11 @@ export default class App extends React.Component {
   }
 
   async componentDidMount() {
-    const result = await TouchID.authenticate('Touch to continue')
+    // const result = await TouchID.authenticate('Touch to continue')
 
-    if (!result) {
-      return
-    }
+    // if (!result) {
+    //   return
+    // }
 
     const crypto = new Crypto()
     await crypto.init()
