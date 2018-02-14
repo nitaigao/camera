@@ -16,9 +16,25 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+  NSDictionary *appDefaults = @{
+                                @"host_preference": @"localhost",
+                                @"port_preference": @"8081",
+                                };
+  [[NSUserDefaults standardUserDefaults] registerDefaults:appDefaults];
+  
   NSURL *jsCodeLocation;
+  
+  NSString *host = [[NSUserDefaults standardUserDefaults] stringForKey: @"host_preference"];
+  NSString *port = [[NSUserDefaults standardUserDefaults] stringForKey: @"port_preference"];
+  
+  NSString * urlString = [NSString stringWithFormat: @"http://%@:%@/index.ios.bundle?platform=ios&dev=true", host, port];
+  jsCodeLocation = [NSURL URLWithString: urlString];
 
   jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];
+  
+  jsCodeLocation = [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
+  
+  NSLog(@"%@", jsCodeLocation);
 
   RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
                                                       moduleName:@"auth"
