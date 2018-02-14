@@ -205,7 +205,6 @@ export default class App extends React.Component {
 
     const authService = new AuthService(url)
     const result = await authService.login()
-    console.log(result)
     this.setState({ ...state, requesting: false })
   }
 
@@ -213,7 +212,10 @@ export default class App extends React.Component {
     if (!this.state.requesting) {
       Vibration.vibrate()
       const url = parse(e.data, true)
-      this.serverCallback(url)
+      const validLink = url.protocol.includes('qrl')
+      if (validLink) {
+        this.serverCallback(url)
+      }
     }
   }
 
